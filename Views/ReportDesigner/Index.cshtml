@@ -1,0 +1,26 @@
+﻿@Html.SF().ReportDesigner("reportdesigner").ServiceUrl(ReportsMVCSamples.Models.Globals.DESIGNER_SERVICE_URL).Create("controlCreate").ToolbarRendering("toolbarRendering").ToolbarClick("toolbarClick").ToolbarSettings(tb => tb.Items(Syncfusion.Reporting.ReportDesignerEnums.ToolbarItems.All & ~Syncfusion.Reporting.ReportDesignerEnums.ToolbarItems.Save)).ReportItemExtensions(
+    ext => {
+        ext.ClassName("EJBarcode").Name("barcode").ImageClass("customitem-barcode").DisplayName("1D Barcode").Category("Barcodes").Add();
+        ext.ClassName("EJQRBarcode").Name("qrbarcode").ImageClass("customitem-qrbarcode").DisplayName("QR Barcode").Category("Barcodes").Add();
+     })
+
+
+<script>
+    function controlCreate() {
+        var designer = $('#reportdesigner').data('ejReportDesigner');
+        designer.openReport(location.search.split('=')[1]);
+    }
+    function toolbarRendering(args) {
+        if ($(args.target).hasClass('e-rptdesigner-toolbarcontainer')) {
+            var saveButton = ej.buildTag('li.e-rptdesigner-toolbarli e-designer-toolbar-align e-tooltxt', '', {}, {});
+            var saveIcon = ej.buildTag('span.e-rptdesigner-toolbar-icon e-toolbarfonticonbasic e-rptdesigner-toolbar-save e-li-item', '', {}, { title: 'Save' });
+            args.target.find('ul:first').append(saveButton.append(saveIcon));
+        }
+    }
+    function toolbarClick(args) {
+        if (args.click === 'Save') {
+            args.cancel = true;
+            $('#reportdesigner').data('ejReportDesigner').saveToDevice();
+        }
+    }
+</script>
